@@ -17,7 +17,7 @@ export default function CommerceChat() {
   const [currentUserInput, setCurrentUserInput] = useState('');
   const [currentProductView, setCurrentProductView] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const scrollAreaViewportRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -58,8 +58,8 @@ export default function CommerceChat() {
   }, [currentProductView]);
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' });
+    if (scrollAreaViewportRef.current) {
+      scrollAreaViewportRef.current.scrollTo({ top: scrollAreaViewportRef.current.scrollHeight, behavior: 'smooth' });
     }
   }, [chatHistory]);
 
@@ -146,14 +146,14 @@ export default function CommerceChat() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background">
-      <Card className="w-full max-w-2xl shadow-2xl rounded-lg">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-headline text-primary">CommerceChat</CardTitle>
+    <div className="flex flex-col h-dvh p-2 sm:p-4 bg-background">
+      <Card className="w-full max-w-2xl shadow-2xl rounded-lg flex flex-col flex-1 overflow-hidden">
+        <CardHeader className="text-center flex-shrink-0">
+          <CardTitle className="text-2xl sm:text-3xl font-headline text-primary">CommerceChat</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <label htmlFor="productView" className="block text-sm font-medium text-foreground font-headline">
+        <CardContent className="flex flex-col flex-1 p-3 sm:p-6 space-y-3 sm:space-y-4 overflow-y-hidden min-h-0">
+          <div className="space-y-2 flex-shrink-0">
+            <label htmlFor="productView" className="block text-xs sm:text-sm font-medium text-foreground font-headline">
               Currently Viewing Product (Optional)
             </label>
             <Input
@@ -162,14 +162,14 @@ export default function CommerceChat() {
               value={currentProductView}
               onChange={(e) => setCurrentProductView(e.target.value)}
               placeholder="e.g., 'Men's Running Shoes'"
-              className="bg-input text-foreground placeholder:text-muted-foreground"
+              className="bg-input text-foreground placeholder:text-muted-foreground text-xs sm:text-sm"
               aria-label="Currently viewing product"
             />
           </div>
 
-          <ScrollArea className="h-[400px] border rounded-md p-4 bg-muted/50" ref={scrollAreaRef}>
+          <ScrollArea className="flex-1 border rounded-md p-2 sm:p-4 bg-muted/50" viewportRef={scrollAreaViewportRef}>
             {chatHistory.length === 0 && (
-              <p className="text-center text-muted-foreground font-body">
+              <p className="text-center text-muted-foreground font-body text-xs sm:text-sm">
                 Ask a question or tell us what you're looking for!
               </p>
             )}
@@ -178,29 +178,29 @@ export default function CommerceChat() {
             ))}
             {isLoading && (
               <div className="flex items-center justify-center p-2">
-                <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                <span className="ml-2 text-muted-foreground font-body">Getting recommendations...</span>
+                <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin text-primary" />
+                <span className="ml-2 text-xs sm:text-sm text-muted-foreground font-body">Getting recommendations...</span>
               </div>
             )}
           </ScrollArea>
 
-          <div className="flex items-end gap-2">
+          <div className="flex items-end gap-2 flex-shrink-0">
             <Textarea
               value={currentUserInput}
               onChange={(e) => setCurrentUserInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type your message or query here..."
-              className="flex-grow resize-none bg-input text-foreground placeholder:text-muted-foreground"
+              className="flex-grow resize-none bg-input text-foreground placeholder:text-muted-foreground text-xs sm:text-sm"
               rows={2}
               aria-label="Chat message input"
             />
             <Button onClick={handleSendMessage} disabled={isLoading} className="bg-primary hover:bg-primary/90 text-primary-foreground" aria-label="Send message">
-              <SendHorizonal className="w-5 h-5" />
+              <SendHorizonal className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
           </div>
           
-          <Button onClick={handleResetChat} variant="outline" className="w-full border-accent text-accent hover:bg-accent/10" aria-label="Reset chat">
-            <RotateCcw className="w-4 h-4 mr-2" /> Reset Chat
+          <Button onClick={handleResetChat} variant="outline" className="w-full border-accent text-accent hover:bg-accent/10 text-xs sm:text-sm flex-shrink-0" aria-label="Reset chat">
+            <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Reset Chat
           </Button>
         </CardContent>
       </Card>
