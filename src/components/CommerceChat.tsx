@@ -82,9 +82,8 @@ export default function CommerceChat() {
       const aiInput = {
         chatHistory: formatChatHistoryForAI(updatedChatHistory),
       };
-      // Type assertion needed if getProductRecommendations expects currentProductView, 
-      // otherwise ensure flow handles its absence.
-      const recommendations: GetProductRecommendationsOutput = await getProductRecommendations(aiInput as any); 
+      
+      const recommendations: GetProductRecommendationsOutput = await getProductRecommendations(aiInput); 
       
       const systemMessage: ChatMessageType = {
         id: (Date.now() + 1).toString(),
@@ -139,7 +138,7 @@ export default function CommerceChat() {
         </CardHeader>
         <CardContent className="flex flex-col flex-1 p-3 sm:p-6 space-y-3 sm:space-y-4 overflow-y-hidden min-h-0">
           
-          <ScrollArea className="flex-1 border rounded-md p-2 sm:p-4 bg-input" viewportRef={scrollAreaViewportRef}>
+          <ScrollArea className="flex-1 border rounded-md p-2 sm:p-4" viewportRef={scrollAreaViewportRef}>
             {chatHistory.length === 0 && (
               <p className="text-center text-muted-foreground font-body text-xs sm:text-sm">
                 Ask a question or tell us what you're looking for!
@@ -179,3 +178,4 @@ export default function CommerceChat() {
     </div>
   );
 }
+
