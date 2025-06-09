@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function ChatPage() {
   return (
-    <main className="flex flex-col flex-grow">
+    <main className="flex flex-col flex-grow items-center justify-center">
       <CommerceChat />
     </main>
   );
