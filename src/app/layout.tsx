@@ -2,7 +2,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 export const metadata: Metadata = {
   title: 'My NextJS App', // More generic title for the whole app
@@ -24,7 +23,6 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         {children}
-        <ThemeToggle />
         <Toaster />
       </body>
     </html>
