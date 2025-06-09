@@ -1,3 +1,4 @@
+
 import type { ChatMessage as ChatMessageType } from '@/lib/types';
 import ProductRecommendations from './ProductRecommendations';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,8 +22,10 @@ export default function ChatMessage({ message }: ChatMessageProps) {
           </AvatarFallback>
         </Avatar>
         <div
-          className={`max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-lg shadow-md ${
-            isUser ? 'bg-primary text-primary-foreground' : 'bg-card text-card-foreground'
+          className={`p-3 rounded-lg shadow-md ${
+            isUser
+              ? 'bg-primary text-primary-foreground max-w-[80%] sm:max-w-sm'
+              : 'bg-card text-card-foreground max-w-sm md:max-w-md lg:max-w-lg'
           }`}
         >
           <p className="text-sm font-body whitespace-pre-wrap">{message.text}</p>
