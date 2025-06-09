@@ -39,7 +39,7 @@ export function ThemeToggle() {
 
   if (theme === null) {
     // Render a placeholder or nothing until theme is determined to avoid flash/layout shift
-    return <div className="fixed bottom-4 right-4 z-50 h-12 w-12 rounded-full" />;
+    return <div className="fixed top-4 right-4 z-50 h-12 w-12 rounded-full" />;
   }
 
   return (
@@ -47,7 +47,7 @@ export function ThemeToggle() {
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      className="fixed bottom-4 right-4 z-50 rounded-full h-12 w-12 shadow-lg border-border bg-background hover:bg-muted"
+      className="fixed top-4 right-4 z-50 rounded-full h-12 w-12 shadow-lg border-border bg-background hover:bg-muted"
       aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
     >
       {theme === 'light' ? (
