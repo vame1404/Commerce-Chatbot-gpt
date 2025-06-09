@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ChatMessage as ChatMessageType } from '@/lib/types';
@@ -5,7 +6,6 @@ import { getProductRecommendations, GetProductRecommendationsOutput } from '@/ai
 import { useState, useEffect, useRef } from 'react';
 import ChatMessage from './ChatMessage';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +15,6 @@ import { useToast } from "@/hooks/use-toast";
 export default function CommerceChat() {
   const [chatHistory, setChatHistory] = useState<ChatMessageType[]>([]);
   const [currentUserInput, setCurrentUserInput] = useState('');
-  const [currentProductView, setCurrentProductView] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaViewportRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -23,18 +22,14 @@ export default function CommerceChat() {
   useEffect(() => {
     try {
       const storedChat = localStorage.getItem('commerceChatHistory');
-      const storedProductView = localStorage.getItem('commerceChatProductView');
       if (storedChat) {
         setChatHistory(JSON.parse(storedChat).map((msg: ChatMessageType) => ({...msg, timestamp: new Date(msg.timestamp)})));
       }
-      if (storedProductView) {
-        setCurrentProductView(storedProductView);
-      }
     } catch (error) {
-      console.error("Failed to load from localStorage", error);
+      console.error("Failed to load chat history from localStorage", error);
       toast({
         title: "Error",
-        description: "Could not load previous session.",
+        description: "Could not load previous chat session.",
         variant: "destructive",
       });
     }
@@ -48,14 +43,6 @@ export default function CommerceChat() {
     }
   }, [chatHistory]);
   
-  useEffect(() => {
-    try {
-      localStorage.setItem('commerceChatProductView', currentProductView);
-    } catch (error)
-    {
-      console.error("Failed to save product view to localStorage", error);
-    }
-  }, [currentProductView]);
 
   useEffect(() => {
     if (scrollAreaViewportRef.current) {
@@ -70,10 +57,10 @@ export default function CommerceChat() {
   };
 
   const handleSendMessage = async () => {
-    if (!currentUserInput.trim() && !currentProductView.trim()) {
+    if (!currentUserInput.trim()) {
       toast({
         title: "Input Required",
-        description: "Please enter a message or specify a product you are viewing.",
+        description: "Please enter a message.",
         variant: "destructive",
       });
       return;
@@ -84,7 +71,7 @@ export default function CommerceChat() {
     const userMessage: ChatMessageType = {
       id: Date.now().toString(),
       sender: 'user',
-      text: currentUserInput.trim() || "Based on the current product...",
+      text: currentUserInput.trim(),
       timestamp: new Date(),
     };
     const updatedChatHistory = [...chatHistory, userMessage];
@@ -94,14 +81,15 @@ export default function CommerceChat() {
     try {
       const aiInput = {
         chatHistory: formatChatHistoryForAI(updatedChatHistory),
-        currentProductView: currentProductView.trim() || "general inquiry",
       };
-      const recommendations: GetProductRecommendationsOutput = await getProductRecommendations(aiInput);
+      // Type assertion needed if getProductRecommendations expects currentProductView, 
+      // otherwise ensure flow handles its absence.
+      const recommendations: GetProductRecommendationsOutput = await getProductRecommendations(aiInput as any); 
       
       const systemMessage: ChatMessageType = {
         id: (Date.now() + 1).toString(),
         sender: 'system',
-        text: `Here are some recommendations based on your interest in "${currentProductView || 'your query'}" and chat history:`,
+        text: `Here are some recommendations based on your query and chat history:`,
         timestamp: new Date(),
         recommendations: recommendations,
       };
@@ -128,10 +116,8 @@ export default function CommerceChat() {
 
   const handleResetChat = () => {
     setChatHistory([]);
-    setCurrentProductView('');
     setCurrentUserInput('');
     localStorage.removeItem('commerceChatHistory');
-    localStorage.removeItem('commerceChatProductView');
     toast({
       title: "Chat Reset",
       description: "The conversation has been cleared.",
@@ -152,22 +138,8 @@ export default function CommerceChat() {
           <CardTitle className="text-2xl sm:text-3xl font-headline text-primary">CommerceChat</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col flex-1 p-3 sm:p-6 space-y-3 sm:space-y-4 overflow-y-hidden min-h-0">
-          <div className="space-y-2 flex-shrink-0">
-            <label htmlFor="productView" className="block text-xs sm:text-sm font-medium text-foreground font-headline">
-              Currently Viewing Product (Optional)
-            </label>
-            <Input
-              id="productView"
-              type="text"
-              value={currentProductView}
-              onChange={(e) => setCurrentProductView(e.target.value)}
-              placeholder="e.g., 'Men's Running Shoes'"
-              className="bg-input text-foreground placeholder:text-muted-foreground text-xs sm:text-sm"
-              aria-label="Currently viewing product"
-            />
-          </div>
-
-          <ScrollArea className="flex-1 border rounded-md p-2 sm:p-4 bg-muted/50" viewportRef={scrollAreaViewportRef}>
+          
+          <ScrollArea className="flex-1 border rounded-md p-2 sm:p-4 bg-input" viewportRef={scrollAreaViewportRef}>
             {chatHistory.length === 0 && (
               <p className="text-center text-muted-foreground font-body text-xs sm:text-sm">
                 Ask a question or tell us what you're looking for!
