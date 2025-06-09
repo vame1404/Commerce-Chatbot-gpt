@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'CommerceChat',
-  description: 'Intelligent E-commerce Chatbot',
+  title: 'My NextJS App', // More generic title for the whole app
+  description: 'An application built with Next.js and Firebase Studio.',
 };
 
 export default function RootLayout({
