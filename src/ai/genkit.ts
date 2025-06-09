@@ -1,9 +1,9 @@
 import {genkit} from 'genkit';
-import {openai} from '@genkit-ai/openai'; // Import the OpenAI plugin
+import {googleAI} from '@genkit-ai/googleai'; // Import the Google AI plugin
 
 export const ai = genkit({
   plugins: [
-    openai() // Use the OpenAI plugin
+    googleAI() // Use the Google AI plugin
   ],
-  model: 'openai/gpt-3.5-turbo', // Set a default OpenAI model
+  model: 'googleai/gemini-1.5-flash-latest', // Set a default Google AI model
 });

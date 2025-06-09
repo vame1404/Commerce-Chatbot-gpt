@@ -72,7 +72,17 @@ const productRecommendationsFlow = ai.defineFlow(
     outputSchema: GetProductRecommendationsOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    const {output, usage} = await prompt(input);
+    if (!output) {
+      console.error(
+        'AI prompt did not return a valid output. Full response or usage data:',
+        usage || 'No usage data available.'
+      );
+      throw new Error(
+        'The AI model responded, but the output was not in the expected format. Please check the prompt and model capabilities.'
+      );
+    }
+    return output;
   }
 );
+
