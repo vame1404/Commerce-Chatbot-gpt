@@ -1,10 +1,9 @@
 import {genkit} from 'genkit';
-// Example: import {openai} from '@genkit-ai/openai';
+import {openai} from '@genkit-ai/openai'; // Import the OpenAI plugin
 
 export const ai = genkit({
   plugins: [
-    // Add your AI provider plugin here, e.g., openai()
-    // Make sure to install the corresponding package, e.g., npm install @genkit-ai/openai
+    openai() // Use the OpenAI plugin
   ],
-  // model: 'your-chosen-model', // Set a default model if desired
+  model: 'openai/gpt-3.5-turbo', // Set a default OpenAI model
 });
