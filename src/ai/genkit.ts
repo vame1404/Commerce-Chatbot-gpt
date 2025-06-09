@@ -1,9 +1,15 @@
-import {genkit} from 'genkit';
-// import {openai} from '@genkit-ai/openai'; // Import the OpenAI plugin - Removed due to installation issues
+// utils/openai.ts (or openai.js)
+import OpenAI from 'openai';
 
-export const ai = genkit({
-  plugins: [
-    // openai() // Use the OpenAI plugin - Removed due to installation issues
-  ],
-  // model: 'openai/gpt-3.5-turbo', // Set a default OpenAI model - Removed as OpenAI plugin is not available
+
+export const ai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || '', // Set your key in .env.local
 });
+const completion = await ai.chat.completions.create({
+  model: 'gpt-3.5-turbo',
+  messages: [
+    { role: "system", content: "You are a helpful e-commerce assistant." },
+    { role: "user", content: "Show me mobile phones under ₹20,000" }
+  ],
+});
+
